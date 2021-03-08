@@ -1,70 +1,57 @@
-# deeptest README
+# Deeptest
 
-This is the README for your extension "deeptest". After writing up a brief description, we recommend including the following sections.
+**<div style="font-size:21px">🚧 under construction, do not attempt to use 🚧</div>**
 
-## Features
+The goal of this project is to make it easier to identify the root cause of pytest failures.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Deeptest lets you view coverage data for each individual test case in VSCode to identify which (if any) changes in your code caused failures.
 
-For example if there is an image subfolder under your extension project workspace:
+## The Problem
 
-\!\[feature X\]\(images/feature-x.png\)
+You are working on a bug fix. Main branch is clean according to CI, so you create a branch then put in a few source changes. All config and dependencies remain unchanged.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Let's run some tests before opening a PR:
 
-## Requirements
+```log
+FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_when_data_not_fetched_then_no_regional_update
+FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_connect
+FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_when_data_fetched_then_update
+====== 3 failed, 510 passed, 2 xfailed, 51 warnings in 140.83s (0:02:20) =======
+```
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+These tests look unfamiliar. They may be new, and I don't think they are related to my change. The error logs are hard to decipher.
 
-## Extension Settings
+What could be wrong?
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+1. False positive: The tests are not configured for my dev environment
+2. False positive: The tests are flaky, due to a network dependency/race condition
+3. True positive: My code has somehow modified these testcases
+4. Some combination of the above
 
-For example:
+There are various courses of action I can take to make sense of this. Re-running the suite, debugging individual tests or opening a PR to run CI can help, but are time consuming.
 
-This extension contributes the following settings:
+Deeptest proposes a way of identifying if your code change has impacted a test without re-running failures.
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+## The Solution
 
-## Known Issues
+Deeptest shows lines of code that were run by failing tests, so you can connect test failures with source changes.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### Pre-req: Capture test coverage and results when you run pytest
 
-## Release Notes
+```zsh
+pip install -U pytest pytest-cov
 
-Users appreciate release notes as you update your extension.
+pytest \
+  --cov=src \            # Collect coverage data for your repo
+  --cov-context=test \   # Ensure coverage data is segmented per-test
+  --junit-xml=report.xml # Output test results
+```
 
-### 1.0.0
+### View the code ran by failing tests
 
-Initial release of ...
+When coverage and test report data is captured, you can view test statuses for each line of code.
 
-### 1.0.1
+<p align="center">
+  <img width="750" src="docs/editor.png" />
+</p>
 
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
