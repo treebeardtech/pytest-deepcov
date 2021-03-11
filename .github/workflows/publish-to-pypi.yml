@@ -1,6 +1,7 @@
 on:
   release:
-    types: [published]
+    types:
+      - published
 jobs:
   build-n-publish:
     runs-on: ubuntu-18.04
@@ -8,7 +9,10 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v2
       - run: pip install poetry
+      - run: poetry version ${GITHUB_REF:1}
       - run: poetry build
-      - uses: pypa/gh-action-pypi-publish@master
+      - run: twine upload dist/* -ualex-treebeard-test -p${{ secrets.PYPI_PASSWORD }}
+      - uses: EndBug/add-and-commit@v7.0.0
         with:
-          password: ${{ secrets.PYPI_PASSWORD }}
+          author_name: github-actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com

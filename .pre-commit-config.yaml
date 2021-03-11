@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+    -   id: trailing-whitespace
+  - repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+      - id: black
+        files: '(src|tests).*py'
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.6.4
+    hooks:
+      - id: isort
+        args: ["-m", "3", "--tc"]
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: bash -c 'cd python-cli && poetry run pyright'
+        language: node
+        pass_filenames: false
+        types: [python]
+        additional_dependencies: ["pyright@1.1.91"]

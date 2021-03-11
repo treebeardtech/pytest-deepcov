@@ -8,25 +8,29 @@ jobs:
   pytest:
     defaults:
       run:
-        working-directory: python
+        working-directory: python-cli
 
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         cfg:
-          # - os: ubuntu-latest
-          #   python-version: "3.7"
-          # - os: ubuntu-latest
-          #   python-version: "3.8"
-          # - os: ubuntu-latest
-          #   python-version: "3.9"
+          - os: ubuntu-latest
+            python-version: "3.6"
+          - os: ubuntu-latest
+            python-version: "3.7"
+          - os: ubuntu-latest
+            python-version: "3.8"
+          - os: ubuntu-latest
+            python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.6"
           - os: macos-latest
             python-version: "3.7"
-          # - os: macos-latest
-          #   python-version: "3.8"
-          # - os: macos-latest
-          #   python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.8"
+          - os: macos-latest
+            python-version: "3.9"
 
     runs-on: ${{ matrix.cfg.os }}
     steps:
@@ -38,9 +42,9 @@ jobs:
       - run: poetry config virtualenvs.in-project true
       - run: poetry -V
       - run: poetry install
-      # - uses: pre-commit/action@v2.0.0
-      #   with:
-      #     extra_args: --verbose --all-files
+      - uses: pre-commit/action@v2.0.0
+        with:
+          extra_args: --verbose --all-files
 
       - run: pwd;ls -la;poetry run pytest
 
@@ -49,15 +53,11 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-          # - os: ubuntu-latest
           - os: macos-latest
     runs-on: ${{ matrix.cfg.os }}
-    defaults:
-      run:
-        working-directory: ui
     steps:
       - uses: actions/checkout@v2
       - run: yarn install
+      - run: yarn compile
       - run: yarn lint
-      - run: yarn dist
       - run: yarn test

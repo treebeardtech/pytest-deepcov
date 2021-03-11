@@ -24,3 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 
 .eslintcache
+
+/out
+.vscode-test
+
+src/debug.ts

@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "deeptest"
+version = "0.0.1"
+license = "Apache-2.0"
+homepage = "https://github.com/treebeardtech/deeptest"
+description = "deeptest"
+authors = ["alex-treebeard <alex@treebeard.io>"]
+packages = [
+  {include = "deeptest", from = "src"},
+]
+
+[tool.poetry.scripts]
+deeptest = 'deeptest.cli:run'
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^7.1.2"
+rich = "^9.13.0"
+pydantic = "^1.8.1"
+coverage = "^5.5"
+junitparser = "^2.0.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+twine = "^3.3.0"
+pytest-cov = "^2.11.1"
+snapshottest = "^0.6.0"
+pytest-xdist = "^2.2.1"
+pytest-randomly = "^3.5.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--ignore=tests/resources",
+  "--strict-markers",
+  # "--capture=tee-sys",
+  "--forked"
+]

@@ -44,7 +44,7 @@ pip install -U pytest pytest-cov
 pytest \
   --cov=src \            # Collect coverage data for your repo
   --cov-context=test \   # Ensure coverage data is segmented per-test
-  --junit-xml=report.xml # Output test results
+  --junit-xml=results.xml # Output test results
 ```
 
 ### View the code ran by failing tests
@@ -55,3 +55,8 @@ When coverage and test report data is captured, you can view test statuses for e
   <img width="750" src="docs/editor.png" />
 </p>
 
+## See also
+
+- https://arxiv.org/abs/1607.04347
+- https://github.com/saeg/jaguar
+- https://arxiv.org/pdf/1607.04347.pdf
