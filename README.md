@@ -1,5 +1,8 @@
 # Deeptest
 
+[![PyPI versions](https://img.shields.io/pypi/pyversions/deeptest?logo=python&logoColor=white)](https://pypi.org/project/deeptest)
+[![PyPI versions](https://img.shields.io/pypi/v/deeptest?logo=python&logoColor=white)](https://pypi.org/project/deeptest) [![Twitter](https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter)](https://twitter.com/treebeardtech)
+
 **<div style="font-size:21px">🚧 under construction, do not attempt to use 🚧</div>**
 
 The goal of this project is to make it easier to identify the root cause of pytest failures.

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deeptest"
-version = "0.0.1"
+version = "0.0.6"
 license = "Apache-2.0"
 homepage = "https://github.com/treebeardtech/deeptest"
 description = "deeptest"
