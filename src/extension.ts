@@ -6,14 +6,42 @@ import {promisify} from 'util'
 // import {sample} from './debug'
 
 const exec = promisify(child_process.exec)
-const WIDTH = 22
+const WIDTH = 13
 const BLACK = 'rgba(0,0,0,0.6)'
-const RED = 'rgba(255,0,0,0.6)'
-const YELLOW = 'rgba(255,255,0,0.6)'
+const RED = '#DF0E25'
+const GREEN = '#00CE1C'
+const YELLOW = '#939B00'
+const UNICODE_SPACE = ' '
+const configKey = 'visible'
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext): void {
+interface Line {
+  passed: string[]
+  failed: string[]
+}
+
+interface ExecRes {
+  stdout: string
+  stderr: string
+}
+class CliRunner {
+  constructor(private cli: string, private cwd: string) {}
+
+  async run(cmd: string): Promise<ExecRes> {
+    const shellCmd = `${this.cli} ${cmd} --data-dir=${this.cwd}`
+    console.log(shellCmd)
+    try {
+      return await exec(shellCmd)
+    } catch (ee: any) {
+      console.log(ee)
+      console.log(ee.sdterr)
+      throw ee
+    }
+  }
+}
+
+export async function activate(
+  context: vscode.ExtensionContext
+): Promise<void> {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Deeptest extension activated.')
@@ -21,35 +49,16 @@ export function activate(context: vscode.ExtensionContext): void {
     {}
   )
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
+  let decoratedEditors = new Set<vscode.TextEditor>()
+  const cwd = `${vscode.workspace.workspaceFolders![0].uri.path}/.deeptest`
+  const cli: string = (vscode.workspace.getConfiguration() as any).get(
+    'deeptest'
+  ).cliLocation
+  const cliRunner = new CliRunner(cli, cwd)
+
   let disposable = vscode.commands.registerCommand(
     'deeptest.toggleDeeptest',
     async () => {
-      // The code you place here will be executed every time your command is executed
-
-      // Display a message box to the user
-      const configKey = 'visible'
-      const isVisible = !context.workspaceState.get(configKey, false)
-      context.workspaceState.update(configKey, isVisible)
-
-      const openEditor = vscode.window.visibleTextEditors[0]
-
-      openEditor.setDecorations(decorationType, [])
-
-      if (!isVisible) {
-        return
-      }
-
-      const cwd = `${vscode.workspace.workspaceFolders![0].uri.path}/.deeptest`
-      const source = openEditor.document.fileName
-      const cli: string = (vscode.workspace.getConfiguration() as any).get(
-        'deeptest'
-      ).cliLocation
-
-      const cmd = `cd ${cwd} && ${cli} ${source}`
-      console.log(`RUNNING: ${cmd}`)
       try {
         await exec(`which ${cli}`)
       } catch (e: any) {
@@ -58,100 +67,148 @@ export function activate(context: vscode.ExtensionContext): void {
         )
         return
       }
-      try {
-        vscode.window.showInformationMessage(
-          'Showing per-line test results. Click again to hide.'
-        )
-        const res = await exec(cmd)
-        console.log(res)
-        const data = JSON.parse(res.stdout)
-        // const data = JSON.parse(sample)
-        decorate(openEditor, data, decorationType)
-      } catch (ee: any) {
-        const data = JSON.parse(ee.stdout)
-        console.log(ee)
-        if (data.error) {
-          vscode.window.showErrorMessage(data.error)
+      const isVisible = !context.workspaceState.get(configKey, false)
+
+      if (isVisible) {
+        const status = JSON.parse((await cliRunner.run('')).stdout)
+        if (status.time_since_run === null) {
+          vscode.window.showErrorMessage('No data in .deeptest dir to show')
           return
         }
-        vscode.window.showErrorMessage(
-          'Deeptest Exception ocurred. Please check the logs in the OUTPUT panel below.'
+        const time = status.time_since_run
+        vscode.window.showInformationMessage(`Showing test data from ${time}`)
+        vscode.window.visibleTextEditors.map(async editor => {
+          editor.setDecorations(decorationType, await getDecorations(editor))
+          decoratedEditors.delete(editor)
+        })
+      } else {
+        vscode.window.showInformationMessage('Deeptest: off.')
+        vscode.window.visibleTextEditors.map(editor =>
+          editor.setDecorations(decorationType, [])
         )
       }
+      context.workspaceState.update(configKey, isVisible)
     }
   )
 
+  const disp = vscode.window.onDidChangeActiveTextEditor(async openEditor => {
+    if (openEditor === undefined) {
+      return
+    }
+    const isVisible = context.workspaceState.get(configKey, false)
+
+    if (!isVisible) {
+      openEditor.setDecorations(decorationType, [])
+      return
+    }
+
+    if (decoratedEditors.has(openEditor)) {
+      return
+    }
+    openEditor.setDecorations(decorationType, await getDecorations(openEditor))
+    decoratedEditors.add(openEditor)
+  })
+
   context.subscriptions.push(disposable)
-}
+  context.subscriptions.push(disp)
 
-interface Line {
-  passed: string[]
-  failed: string[]
-}
+  function getContent(
+    line: Line | null,
+    num: number
+  ): [string, string, string] {
+    let textContent = ''
+    let passed = ''
+    let failed = ''
+    let color = BLACK
 
-function getContent(line: Line | null, num: number): [string, string, string] {
-  let textContent = ''
-  let passed = ''
-  let failed = ''
-  let color = BLACK
+    if (line === null) {
+      return [UNICODE_SPACE.padStart(WIDTH, UNICODE_SPACE), '', 'rgba(0,0,0,0)']
+    }
 
-  if (line === null) {
-    return ['-'.padStart(WIDTH, '-'), '', 'rgba(0,0,0,0)']
+    if (line.passed[0] === 'ran on startup') {
+      textContent += '•'
+      color = GREEN
+      passed = 'ran on startup'
+    } else if (line.failed.length > 0) {
+      color = RED
+      textContent += `${line.passed.length} ✔, ${line.failed.length} ✖`
+      failed = `**${line.failed.length} Failed:**\n\n${line.failed.join(
+        '\n\n'
+      )}`
+    } else if (line.passed.length > 0) {
+      textContent += `${line.passed.length} ✔, ${line.failed.length} ✖`
+      color = GREEN
+      passed = `**${line.passed.length} Passed:**\n\n${line.passed.join(
+        '\n\n'
+      )}`
+    } else {
+      color = YELLOW
+      textContent = `0 ✔, 0 ✖`
+    }
+
+    textContent = textContent.padStart(WIDTH, UNICODE_SPACE)
+    const hover = `**Line ${num}**:\n\n ${[failed, passed].join('\n\n')}`
+
+    return [textContent, hover, color]
   }
 
-  if (line.passed.length > 0) {
-    textContent += `${line.passed.length} passed`
-    passed = `**${line.passed.length} Passed:**\n\n${line.passed.join('\n\n')}`
-  }
+  async function getDecorations(
+    editor: vscode.TextEditor
+  ): Promise<vscode.DecorationOptions[]> {
+    const source = editor.document.fileName
 
-  if (line.failed.length > 0) {
-    color = RED
-    textContent += `-${line.failed.length} failed`
-    failed = `**${line.failed.length} Failed:**\n\n${line.failed.join('\n\n')}`
-  } // ✖✔
+    const cmd = `${cli} ${source} --data-dir=${cwd}`
+    console.log(`RUNNING: ${cmd}`)
 
-  if (textContent.length === 0) {
-    color = YELLOW
-    textContent = 'No tests'
-  }
+    try {
+      const res = await exec(cmd)
+      console.log(res)
+      const data = JSON.parse(res.stdout)
+      // const data = JSON.parse(sample)
+      const decs = []
+      for (let line = 0; line < editor.document.lineCount; line++) {
+        let range = new vscode.Range(
+          new vscode.Position(line, 0),
+          new vscode.Position(line + 1, 0)
+        )
 
-  textContent = textContent.padStart(WIDTH, '-')
-  const hover = `**Line ${num}**:\n\n ${[failed, passed].join('\n\n')}`
+        const lineObj = data.lines[`${line + 1}`] || (null as Line | null)
+        const [contentText, hoverMessage, color] = getContent(lineObj, line)
 
-  return [textContent, hover, color]
-}
-
-function decorate(
-  editor: vscode.TextEditor,
-  data: any,
-  deeptestDecorationType: vscode.TextEditorDecorationType
-): void {
-  const decs = []
-  for (let line = 0; line < editor.document.lineCount; line++) {
-    let range = new vscode.Range(
-      new vscode.Position(line, 0),
-      new vscode.Position(line + 1, 0)
-    )
-
-    const lineObj = data.lines[`${line + 1}`] || (null as Line | null)
-    const [contentText, hoverMessage, color] = getContent(lineObj, line)
-
-    const decoration: vscode.DecorationOptions = {
-      hoverMessage,
-      range,
-      renderOptions: {
-        before: {
-          backgroundColor: 'rgba(0,0,0,0.2)',
-          color,
-          height: '100%',
-          margin: '0 26px -1px 0',
-          contentText
+        const decoration: vscode.DecorationOptions = {
+          hoverMessage,
+          range,
+          renderOptions: {
+            before: {
+              backgroundColor: 'rgba(0,0,0,0)',
+              color,
+              height: '100%',
+              margin: '0 26px -1px 0',
+              contentText
+            }
+          }
+        }
+        decs.push(decoration)
+      }
+      return decs
+    } catch (ee: any) {
+      console.log('ERROR')
+      if (ee.stderr) {
+        console.log(ee.stderr)
+      } else {
+        const data = JSON.parse(ee.stdout)
+        if (data.error) {
+          vscode.window.showErrorMessage(data.error)
+        } else {
+          console.log(ee)
+          vscode.window.showErrorMessage(
+            'Deeptest Exception ocurred. Please check the logs in the OUTPUT panel below.'
+          )
         }
       }
     }
-    decs.push(decoration)
+    return []
   }
-  editor.setDecorations(deeptestDecorationType, decs)
 }
 
 // this method is called when your extension is deactivated

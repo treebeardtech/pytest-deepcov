@@ -32,12 +32,12 @@
 		],
 		"menus": {
 			"editor/title": [
-			  {
-				"command": "deeptest.toggleDeeptest",
-				"group": "navigation"
-			  }
+				{
+					"command": "deeptest.toggleDeeptest",
+					"group": "navigation"
+				}
 			]
-		  }
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
@@ -64,5 +64,6 @@
 		"typescript": "^4.1.3",
 		"vscode-test": "^1.5.0"
 	},
-	"dependencies": {}
+	"dependencies": {
+	}
 }

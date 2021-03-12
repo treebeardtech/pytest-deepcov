@@ -19,6 +19,7 @@ rich = "^9.13.0"
 pydantic = "^1.8.1"
 coverage = "^5.5"
 junitparser = "^2.0.0"
+timeago = "^1.0.15"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"

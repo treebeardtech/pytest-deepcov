@@ -1,11 +1,13 @@
 import json
 import os
 import sys
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, cast
+from typing import Dict, List, Optional, cast
 
 import click
+import timeago
 from coverage import Coverage, CoverageData
 from coverage.misc import NoSource
 from junitparser import JUnitXml
@@ -73,9 +75,23 @@ def get_file_cov(src: str, coverage: Coverage, coverage_data: CoverageData):
 
 
 @click.command()
-@click.argument("source")
-def run(source: str):
+@click.argument("source", required=False)
+@click.option("--data-dir", default=None)
+def run(source: Optional[str], data_dir: Optional[str]):
     """"""
+    if data_dir:
+        Path(data_dir).mkdir(exist_ok=True, parents=True)
+        os.chdir(data_dir)
+
+    if source is None:
+        if Path(".coverage").exists():
+            stats = os.stat(".coverage")
+            dt = datetime.fromtimestamp(stats.st_mtime)
+            ago = timeago.format(dt, datetime.now())
+            click.echo(json.dumps({"time_since_run": ago}))
+        else:
+            click.echo(json.dumps({"time_since_run": None}))
+        sys.exit(0)
     src = Path(source).as_posix()
     test_results = Path("junit.xml")
     if not test_results.exists():
@@ -108,8 +124,13 @@ def run(source: str):
     assert coverage_data is not None
     lines, missing_lines = get_file_cov(src, coverage, coverage_data)
 
-    norm_contexts = {norm(ctx) for ctx in coverage_data.measured_contexts()}
-    assert norm_contexts.difference(status.keys()) == set()
+    # norm_contexts = {norm(ctx) for ctx in coverage_data.measured_contexts()}
+
+    # no_matching_key = norm_contexts.difference(status.keys())
+
+    # if len(no_matching_key)> 0:
+    #     lkj = '\n'.join(no_matching_key)
+    #     click.echo(f"No matching key:{lkj} ")
 
     file = File(
         lines={

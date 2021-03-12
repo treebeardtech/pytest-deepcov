@@ -90,3 +90,13 @@ class TestCli:
         print(f"Running {source}")
         result = runner.invoke(cli.run, source.as_posix(), catch_exceptions=False)
         assert json.loads(result.stdout)["error"].startswith("No cov")
+
+    def test_when_status_then_time_given(self, tested_dir: object):
+        runner = CliRunner()
+        result = runner.invoke(cli.run, catch_exceptions=False)
+        assert json.loads(result.stdout)["time_since_run"] == "just now"
+
+    def test_when_status_no_data_then_null(self, testdir: pytest.Testdir):
+        runner = CliRunner()
+        result = runner.invoke(cli.run, catch_exceptions=False)
+        assert json.loads(result.stdout)["time_since_run"] == None
