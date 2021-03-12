@@ -1,6 +1,12 @@
 {
 	"name": "deeptest",
+	"publisher": "treebeardtech",
 	"displayName": "Deeptest",
+	"repository": {
+		"url": "https://github.com/treebeardtech/deeptest",
+		"type": "git"
+	},
+	"icon": "docs/tree.png",
 	"description": "",
 	"version": "0.0.1",
 	"engines": {

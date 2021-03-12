@@ -39,11 +39,19 @@ snapshots["TestCli.test_when_test_file_then_success 11"] = {
 }
 
 snapshots["TestCli.test_when_test_file_then_success 12"] = {
-    20: GenericRepr("Line(passed=['ran on startup'], failed=[])")
+    20: GenericRepr("Line(passed=[], failed=['src.test_lib.TestLib.test_hello2'])")
 }
 
 snapshots["TestCli.test_when_test_file_then_success 13"] = {
-    21: GenericRepr(
+    22: GenericRepr("Line(passed=['ran on startup'], failed=[])")
+}
+
+snapshots["TestCli.test_when_test_file_then_success 14"] = {
+    23: GenericRepr("Line(passed=['ran on startup'], failed=[])")
+}
+
+snapshots["TestCli.test_when_test_file_then_success 15"] = {
+    24: GenericRepr(
         "Line(passed=['src.test_lib.TestLib.test_divide2[3.0]'], failed=['src.test_lib.TestLib.test_divide2[0]'])"
     )
 }

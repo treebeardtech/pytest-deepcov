@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
 import * as child_process from 'child_process'
 import {promisify} from 'util'
@@ -7,7 +5,6 @@ import {promisify} from 'util'
 
 const exec = promisify(child_process.exec)
 const WIDTH = 13
-const BLACK = 'rgba(0,0,0,0.6)'
 const RED = '#DF0E25'
 const GREEN = '#00CE1C'
 const YELLOW = '#939B00'
@@ -42,8 +39,6 @@ class CliRunner {
 export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
   console.log('Deeptest extension activated.')
   const decorationType: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType(
     {}
@@ -119,7 +114,7 @@ export async function activate(
     let textContent = ''
     let passed = ''
     let failed = ''
-    let color = BLACK
+    let color = GREEN
 
     if (line === null) {
       return [UNICODE_SPACE.padStart(WIDTH, UNICODE_SPACE), '', 'rgba(0,0,0,0)']
@@ -129,21 +124,25 @@ export async function activate(
       textContent += '•'
       color = GREEN
       passed = 'ran on startup'
-    } else if (line.failed.length > 0) {
-      color = RED
-      textContent += `${line.passed.length} ✔, ${line.failed.length} ✖`
-      failed = `**${line.failed.length} Failed:**\n\n${line.failed.join(
-        '\n\n'
-      )}`
-    } else if (line.passed.length > 0) {
-      textContent += `${line.passed.length} ✔, ${line.failed.length} ✖`
-      color = GREEN
-      passed = `**${line.passed.length} Passed:**\n\n${line.passed.join(
-        '\n\n'
-      )}`
+    } else if (line.failed.length > 0 || line.passed.length > 0) {
+      const statements = []
+      if (line.failed.length > 0) {
+        color = RED
+        statements.push(`${line.failed.length} ✖`)
+        failed = `**${line.failed.length} Failed:**\n\n${line.failed.join(
+          '\n\n'
+        )}`
+      }
+      if (line.passed.length > 0) {
+        statements.push(`${line.passed.length} ✔`)
+        passed = `**${line.passed.length} Passed:**\n\n${line.passed.join(
+          '\n\n'
+        )}`
+      }
+      textContent += statements.join(', ')
     } else {
       color = YELLOW
-      textContent = `0 ✔, 0 ✖`
+      textContent = `0`
     }
 
     textContent = textContent.padStart(WIDTH, UNICODE_SPACE)
@@ -211,5 +210,4 @@ export async function activate(
   }
 }
 
-// this method is called when your extension is deactivated
 export function deactivate(): void {}
