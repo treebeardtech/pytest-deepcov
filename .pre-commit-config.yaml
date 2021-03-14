@@ -32,6 +32,12 @@ repos:
       hooks:
           - id: isort
             args: [-m, '3', --tc]
+    - repo: https://github.com/pre-commit/mirrors-prettier
+      rev: v2.2.1
+      hooks:
+          - id: prettier
+            types:
+                - ts
     - repo: local
       hooks:
           - id: pyright
@@ -41,3 +47,12 @@ repos:
             pass_filenames: false
             types: [python]
             additional_dependencies: [pyright@1.1.91]
+    - repo: local
+      hooks:
+          - id: tsc-lint
+            name: tsc-lint
+            entry: bash -c 'yarn compile && yarn lint --fix'
+            language: node
+            pass_filenames: false
+            types:
+                - ts

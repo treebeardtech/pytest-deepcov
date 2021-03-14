@@ -41,7 +41,7 @@ jobs:
                   python-version: ${{ matrix.cfg.python-version }}
             - run: pip install poetry
             - run: poetry config virtualenvs.in-project true
-            - run: poetry -V
+            - run: yarn install
             - run: poetry install
             - uses: pre-commit/action@v2.0.0
               with:

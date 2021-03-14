@@ -28,7 +28,7 @@ class CliRunner {
     console.log(shellCmd)
     try {
       return await exec(shellCmd)
-    } catch (ee: any) {
+    } catch (ee) {
       console.log(ee)
       console.log(ee.sdterr)
       throw ee
@@ -56,7 +56,7 @@ export async function activate(
     async () => {
       try {
         await exec(`which ${cli}`)
-      } catch (e: any) {
+      } catch (e) {
         vscode.window.showErrorMessage(
           `Cannot find deeptest cli at "${cli}", please check the deeptest vscode settings.`
         )
@@ -190,7 +190,7 @@ export async function activate(
         decs.push(decoration)
       }
       return decs
-    } catch (ee: any) {
+    } catch (ee) {
       console.log('ERROR')
       if (ee.stderr) {
         console.log(ee.stderr)

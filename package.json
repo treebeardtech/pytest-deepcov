@@ -73,8 +73,6 @@
   },
   "scripts": {
     "compile": "tsc -p ./",
-    "format": "prettier --write src/**/*.ts",
-    "format-check": "prettier --check src/**/*.ts",
     "lint": "eslint src --ext ts",
     "pretest": "yarn run compile && yarn run lint",
     "test": "node ./out/test/runTest.js",
