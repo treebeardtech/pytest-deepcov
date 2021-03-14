@@ -4,6 +4,7 @@ repos:
       rev: v3.3.0
       hooks:
           - id: trailing-whitespace
+          - id: check-toml
           - id: pretty-format-json
             args:
                 - --autofix
