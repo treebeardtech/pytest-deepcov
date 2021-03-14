@@ -1,75 +1,85 @@
 {
-	"name": "deeptest",
-	"publisher": "treebeardtech",
-	"displayName": "Deeptest",
-	"repository": {
-		"url": "https://github.com/treebeardtech/deeptest",
-		"type": "git"
-	},
-	"icon": "docs/tree.png",
-	"description": "",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.54.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:deeptest.toggleDeeptest"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"configuration": {
-			"properties": {
-				"deeptest.cliLocation": {
-					"type": "string",
-					"default": "deeptest",
-					"markdownDescription": "The location of your deeptest cli. Run `which deeptest` in the shell to debug.",
-					"scope": "window"
-				}
-			}
-		},
-		"commands": [
-			{
-				"command": "deeptest.toggleDeeptest",
-				"title": "Deeptest"
-			}
-		],
-		"menus": {
-			"editor/title": [
-				{
-					"command": "deeptest.toggleDeeptest",
-					"group": "navigation"
-				}
-			]
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "yarn run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "yarn run compile && yarn run lint",
-		"lint": "eslint src --ext ts",
-		"format": "prettier --write src/**/*.ts",
-		"format-check": "prettier --check src/**/*.ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.0.4",
-		"@types/node": "^12.11.7",
-		"@types/vscode": "^1.54.0",
-		"@typescript-eslint/eslint-plugin": "^4.14.1",
-		"@typescript-eslint/parser": "^4.17.0",
-		"eslint": "^7.19.0",
-		"eslint-plugin-prettier": "^3.3.1",
-		"glob": "^7.1.6",
-		"mocha": "^8.2.1",
-		"prettier": "^2.2.1",
-		"typescript": "^4.1.3",
-		"vscode-test": "^1.5.0"
-	},
-	"dependencies": {
-	}
+  "activationEvents": [
+    "onCommand:deeptest.toggleDeeptest"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "deeptest.toggleDeeptest",
+        "title": "Deeptest"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "deeptest.cliLocation": {
+          "default": "deeptest",
+          "markdownDescription": "The location of your deeptest cli. Run `which deeptest` in the shell to debug.",
+          "scope": "window",
+          "type": "string"
+        }
+      }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "deeptest.toggleDeeptest",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "dependencies": {},
+  "description": "",
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.54.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.17.0",
+    "eslint": "^7.19.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "glob": "^7.1.6",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3",
+    "vscode-test": "^1.5.0"
+  },
+  "displayName": "Deeptest",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "icon": "docs/tree.png",
+  "main": "./out/extension.js",
+  "name": "deeptest",
+  "prettier": {
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "parser": "typescript",
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
+  },
+  "publisher": "treebeardtech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/treebeardtech/deeptest"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "format": "prettier --write src/**/*.ts",
+    "format-check": "prettier --check src/**/*.ts",
+    "lint": "eslint src --ext ts",
+    "pretest": "yarn run compile && yarn run lint",
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "yarn run compile",
+    "watch": "tsc -watch -p ./"
+  },
+  "version": "0.0.1"
 }

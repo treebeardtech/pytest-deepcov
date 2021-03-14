@@ -1,67 +1,67 @@
+---
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+    pull_request:
+    push:
+        branches:
+            - main
 
 jobs:
-  pytest:
-    defaults:
-      run:
-        working-directory: python-cli
+    pytest:
+        defaults:
+            run:
+                working-directory: python-cli
 
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        cfg:
-          - os: ubuntu-latest
-            python-version: "3.6"
-          - os: ubuntu-latest
-            python-version: "3.7"
-          - os: ubuntu-latest
-            python-version: "3.8"
-          - os: ubuntu-latest
-            python-version: "3.9"
-          - os: macos-latest
-            python-version: "3.6"
-          - os: macos-latest
-            python-version: "3.7"
-          - os: macos-latest
-            python-version: "3.8"
-          - os: macos-latest
-            python-version: "3.9"
+        timeout-minutes: 20
+        strategy:
+            fail-fast: false
+            matrix:
+                cfg:
+                    - os: ubuntu-latest
+                      python-version: '3.6'
+                    - os: ubuntu-latest
+                      python-version: '3.7'
+                    - os: ubuntu-latest
+                      python-version: '3.8'
+                    - os: ubuntu-latest
+                      python-version: '3.9'
+                    - os: macos-latest
+                      python-version: '3.6'
+                    - os: macos-latest
+                      python-version: '3.7'
+                    - os: macos-latest
+                      python-version: '3.8'
+                    - os: macos-latest
+                      python-version: '3.9'
 
-    runs-on: ${{ matrix.cfg.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.cfg.python-version }}
-      - run: pip install poetry
-      - run: poetry config virtualenvs.in-project true
-      - run: poetry -V
-      - run: poetry install
-      - uses: pre-commit/action@v2.0.0
-        with:
-          extra_args: --verbose --all-files
+        runs-on: ${{ matrix.cfg.os }}
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.cfg.python-version }}
+            - run: pip install poetry
+            - run: poetry config virtualenvs.in-project true
+            - run: poetry -V
+            - run: poetry install
+            - uses: pre-commit/action@v2.0.0
+              with:
+                  extra_args: --verbose --all-files
 
-      - run: pwd;ls -la;poetry run pytest
+            - run: pwd;ls -la;poetry run pytest
 
-  ui-test:
-    strategy:
-      fail-fast: false
-      matrix:
-        cfg:
-          - os: macos-latest
-    runs-on: ${{ matrix.cfg.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn test
-      - run: npm i --global vsce
-      - run: vsce package
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-
+    ui-test:
+        strategy:
+            fail-fast: false
+            matrix:
+                cfg:
+                    - os: macos-latest
+        runs-on: ${{ matrix.cfg.os }}
+        steps:
+            - uses: actions/checkout@v2
+            - run: yarn install
+            - run: yarn lint
+            - run: yarn test
+            - run: npm i --global vsce
+            - run: vsce package
+              env:
+                  VSCE_PAT: ${{ secrets.VSCE_PAT }}

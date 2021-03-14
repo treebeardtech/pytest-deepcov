@@ -1,24 +1,42 @@
+---
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
-    hooks:
-    -   id: trailing-whitespace
-  - repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-      - id: black
-        files: '(src|tests).*py'
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.6.4
-    hooks:
-      - id: isort
-        args: ["-m", "3", "--tc"]
-  - repo: local
-    hooks:
-      - id: pyright
-        name: pyright
-        entry: bash -c 'cd python-cli && poetry run pyright'
-        language: node
-        pass_filenames: false
-        types: [python]
-        additional_dependencies: ["pyright@1.1.91"]
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.3.0
+      hooks:
+          - id: trailing-whitespace
+          - id: pretty-format-json
+            args:
+                - --autofix
+    - repo: https://github.com/adrienverge/yamllint.git
+      rev: v1.21.0  # or higher tag
+      hooks:
+          - id: yamllint
+            args:
+                - --format
+                - parsable
+                - --strict
+                - '-d {extends: relaxed, rules: {line-length: {max: 150}}}'
+
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.0.11  # or specific tag
+      hooks:
+          - id: yamlfmt
+    - repo: https://github.com/ambv/black
+      rev: stable
+      hooks:
+          - id: black
+            files: (src|tests).*py
+    - repo: https://github.com/PyCQA/isort
+      rev: 5.6.4
+      hooks:
+          - id: isort
+            args: [-m, '3', --tc]
+    - repo: local
+      hooks:
+          - id: pyright
+            name: pyright
+            entry: bash -c 'cd python-cli && poetry run pyright'
+            language: node
+            pass_filenames: false
+            types: [python]
+            additional_dependencies: [pyright@1.1.91]

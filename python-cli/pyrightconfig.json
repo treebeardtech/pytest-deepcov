@@ -1,15 +1,17 @@
 {
-  "include": ["src", "tests"],
-
-  "typeCheckingMode": "strict",
-  "reportUnusedImport": true,
-  "pythonVersion": "3.7",
   "enableTypeIgnoreComments": true,
+  "include": [
+    "src",
+    "tests"
+  ],
+  "pythonVersion": "3.7",
+  "reportMissingTypeStubs": false,
+  "reportPrivateUsage": "warning",
+  "reportUnknownArgumentType": "warning",
   "reportUnknownMemberType": "warning",
   "reportUnknownParameterType": "warning",
   "reportUnknownVariableType": "warning",
-  "reportUnknownArgumentType": "warning",
-  "reportPrivateUsage": "warning",
   "reportUntypedFunctionDecorator": "warning",
-  "reportMissingTypeStubs": false
+  "reportUnusedImport": true,
+  "typeCheckingMode": "strict"
 }

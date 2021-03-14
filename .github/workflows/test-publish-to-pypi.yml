@@ -1,25 +1,25 @@
+---
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+    pull_request:
+    push:
+        branches:
+            - main
 jobs:
-  build-n-publish:
-    defaults:
-      run:
-        working-directory: python-cli
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - run: pip install poetry
-      - run: |
-          build_version="$(poetry version -s).dev$(date +%s)"
-          echo $build_version
-          poetry version $build_version
-      - run: poetry build
-      - run: pip install "dist/deeptest-$(poetry version -s).tar.gz"
-      - run: pip install twine
-      - run: ls -la dist
-      - run: twine upload --repository testpypi dist/* -ualex-treebeard-test -p${{ secrets.TEST_PYPI_PASSWORD }}
-
+    build-n-publish:
+        defaults:
+            run:
+                working-directory: python-cli
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+            - run: pip install poetry
+            - run: |
+                  build_version="$(poetry version -s).dev$(date +%s)"
+                  echo $build_version
+                  poetry version $build_version
+            - run: poetry build
+            - run: pip install "dist/deeptest-$(poetry version -s).tar.gz"
+            - run: pip install twine
+            - run: ls -la dist
+            - run: twine upload --repository testpypi dist/* -ualex-treebeard-test -p${{ secrets.TEST_PYPI_PASSWORD }}
