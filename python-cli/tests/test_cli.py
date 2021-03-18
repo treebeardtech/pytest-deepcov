@@ -5,16 +5,14 @@ import pytest
 from click.testing import CliRunner
 from deeptest.cli import File
 from snapshottest.pytest import PyTestSnapshotTest
+from tests.util import RESOURCES
 
 from deeptest import cli
 
 pytest_plugins = "pytester"
 import shutil
 import sys
-from pathlib import Path
 from subprocess import CalledProcessError, check_output
-
-RESOURCES = (Path(__file__) / ".." / "resources").resolve()
 
 
 @pytest.fixture

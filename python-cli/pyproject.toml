@@ -40,3 +40,6 @@ addopts = [
   # "--capture=tee-sys",
   "--forked"
 ]
+
+[tool.poetry.plugins."pytest11"]
+deeptest = "deeptest.pytest_plugin"
