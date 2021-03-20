@@ -17,7 +17,7 @@ def is_enabled(config: Config) -> bool:
 def pytest_load_initial_conftests(
     early_config: Config, parser: Parser, args: List[str]
 ):
-    if sys.gettrace():
+    if sys.gettrace() or "--co" in args or "--collect-only" in args:
         early_config.known_args_namespace.cov_source = None
         early_config.option.no_cov = True
 
