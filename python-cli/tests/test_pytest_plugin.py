@@ -18,6 +18,8 @@ import shutil
 @pytest.fixture
 def fake_repo(testdir: Testdir):
     copy_tree(RESOURCES.as_posix(), ".")
+    shutil.rmtree(".deeptest", ignore_errors=True)
+    return testdir
 
 
 def test_when_no_xml_then_output_correctly(testdir: Testdir, fake_repo: object):
@@ -45,4 +47,12 @@ def test_when_trace_present_then_disables_cov(testdir: Testdir, fake_repo: objec
     hook_recorder = testdir.inline_run()
 
     assert hook_recorder.ret == ExitCode.TESTS_FAILED
+    assert not Path(".deeptest/junit.xml").exists()
+
+
+def test_when_collect_only_then_no_output(fake_repo: Testdir):
+    assert not Path(".deeptest/junit.xml").exists()
+    hook_recorder = fake_repo.inline_run("--co")
+
+    assert hook_recorder.ret == ExitCode.OK
     assert not Path(".deeptest/junit.xml").exists()
