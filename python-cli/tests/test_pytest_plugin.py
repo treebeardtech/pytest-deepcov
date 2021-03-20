@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import os
+import sys
 from distutils.dir_util import copy_tree
 from pathlib import Path
 
@@ -33,3 +35,14 @@ def test_when_other_xml_then_output_correctly(testdir: Testdir, fake_repo: objec
     assert hook_recorder.ret == ExitCode.TESTS_FAILED
     assert Path(".deeptest/junit.xml").exists()
     assert Path("junit.xml").exists()
+
+
+def test_when_trace_present_then_disables_cov(testdir: Testdir, fake_repo: object):
+    print(os.getcwd())
+    shutil.rmtree(".deeptest", ignore_errors=True)
+    assert not Path(".deeptest/junit.xml").exists()
+    sys.settrace(lambda x, y, z: None)
+    hook_recorder = testdir.inline_run()
+
+    assert hook_recorder.ret == ExitCode.TESTS_FAILED
+    assert not Path(".deeptest/junit.xml").exists()

@@ -37,8 +37,9 @@ build-backend = "poetry.core.masonry.api"
 addopts = [
   "--ignore=tests/resources",
   "--strict-markers",
-  # "--capture=tee-sys",
-  "--forked"
+  "--capture=tee-sys",
+  "--forked",
+  "-p","no:deeptest"
 ]
 
 [tool.poetry.plugins."pytest11"]
