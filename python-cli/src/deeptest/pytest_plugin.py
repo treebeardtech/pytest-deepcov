@@ -1,12 +1,15 @@
 import shutil
 import sys
+from pathlib import Path
 from typing import Any, List, cast
 
 from _pytest.config import Config
 from _pytest.config.argparsing import Parser
+from coverage import Coverage
 from pytest import ExitCode, hookimpl
 
-out_path = ".deeptest/junit.xml"
+JUNIT_DEST = ".deeptest/junit.xml"
+COV_DEST = ".deeptest/.coverage"
 
 
 def is_enabled(config: Config) -> bool:
@@ -28,12 +31,18 @@ def pytest_load_initial_conftests(
 
 def pytest_configure(config: Config):
     if is_enabled(config) and config.option.xmlpath is None:
-        config.option.xmlpath = out_path
+        config.option.xmlpath = JUNIT_DEST
 
 
 def pytest_terminal_summary(
     terminalreporter: Any, exitstatus: ExitCode, config: Config
 ):
-    if is_enabled(config) and config.option.xmlpath != out_path:
-        print(f"Copying {config.option.xmlpath} to {out_path}")
-        shutil.copy(config.option.xmlpath, out_path)
+    if is_enabled(config):
+        Path(".deeptest").mkdir(exist_ok=True)
+
+        if config.option.xmlpath != JUNIT_DEST:
+            shutil.copy(config.option.xmlpath, JUNIT_DEST)
+
+        cc = Coverage(config_file=config.option.cov_config)
+        if cc.config.data_file != COV_DEST:
+            shutil.copy(cc.config.data_file, COV_DEST)

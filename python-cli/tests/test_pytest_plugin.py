@@ -28,6 +28,7 @@ def test_when_no_xml_then_output_correctly(testdir: Testdir, fake_repo: object):
 
     assert hook_recorder.ret == ExitCode.TESTS_FAILED
     assert Path(".deeptest/junit.xml").exists()
+    assert Path(".deeptest/.coverage").exists()
 
 
 def test_when_other_xml_then_output_correctly(testdir: Testdir, fake_repo: object):
