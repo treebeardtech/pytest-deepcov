@@ -20,11 +20,11 @@ pydantic = "^1.8.1"
 coverage = "^5.5"
 junitparser = "^2.0.0"
 timeago = "^1.0.15"
+pytest-cov = "^2.11.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
 twine = "^3.3.0"
-pytest-cov = "^2.11.1"
 snapshottest = "^0.6.0"
 pytest-xdist = "^2.2.1"
 pytest-randomly = "^3.5.0"
