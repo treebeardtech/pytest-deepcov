@@ -8,8 +8,8 @@ from _pytest.config.argparsing import Parser
 from coverage import Coverage
 from pytest import ExitCode, hookimpl
 
-JUNIT_DEST = ".deeptest/junit.xml"
-COV_DEST = ".deeptest/.coverage"
+JUNIT_DEST = ".deepcov/junit.xml"
+COV_DEST = ".deepcov/.coverage"
 
 
 def is_enabled(config: Config) -> bool:
@@ -38,7 +38,7 @@ def pytest_terminal_summary(
     terminalreporter: Any, exitstatus: ExitCode, config: Config
 ):
     if is_enabled(config):
-        Path(".deeptest").mkdir(exist_ok=True)
+        Path(".deepcov").mkdir(exist_ok=True)
 
         if config.option.xmlpath != JUNIT_DEST:
             shutil.copy(config.option.xmlpath, JUNIT_DEST)

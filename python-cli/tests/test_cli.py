@@ -3,11 +3,10 @@ import os
 
 import pytest
 from click.testing import CliRunner
-from deeptest.cli import File
+from deepcov import cli
+from deepcov.cli import File
 from snapshottest.pytest import PyTestSnapshotTest
 from tests.util import RESOURCES
-
-from deeptest import cli
 
 pytest_plugins = "pytester"
 import shutil
@@ -21,7 +20,7 @@ def tested_dir():
         check_output(f"{sys.executable} -m pytest", cwd="tests/resources", shell=True)
     except CalledProcessError as err:
         assert err.returncode == 1
-    os.chdir(RESOURCES / ".deeptest")
+    os.chdir(RESOURCES / ".deepcov")
 
 
 class TestCli:
@@ -56,7 +55,7 @@ class TestCli:
         tested_dir: object,
         testdir: pytest.Testdir,
     ):
-        shutil.copyfile(RESOURCES / ".deeptest" / ".coverage", ".coverage")
+        shutil.copyfile(RESOURCES / ".deepcov" / ".coverage", ".coverage")
         runner = CliRunner()
         source = RESOURCES / "src" / "lib.py"
         assert source.exists()
@@ -65,7 +64,7 @@ class TestCli:
         assert "error" in json.loads(result.stdout)
 
     def test_when_no_cov_then_error(self, tested_dir: object, testdir: pytest.Testdir):
-        shutil.copyfile(RESOURCES / ".deeptest" / "junit.xml", "junit.xml")
+        shutil.copyfile(RESOURCES / ".deepcov" / "junit.xml", "junit.xml")
         runner = CliRunner()
         source = RESOURCES / "src" / "lib.py"
         assert source.exists()

@@ -7,7 +7,7 @@
   },
   "sqltools.connections": [
     {
-      "database": "${workspaceFolder:deeptest}/debug/src/.coverage",
+      "database": "${workspaceFolder:deepcov}/debug/src/.coverage",
       "driver": "SQLite",
       "name": "cov",
       "previewLimit": 50

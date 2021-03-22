@@ -1,13 +1,13 @@
-# Deeptest
+# Deepcov
 
-[![PyPI versions](https://img.shields.io/pypi/pyversions/deeptest?logo=python&logoColor=white)](https://pypi.org/project/deeptest)
-[![PyPI versions](https://img.shields.io/pypi/v/deeptest?logo=python&logoColor=white)](https://pypi.org/project/deeptest) [![Twitter](https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter)](https://twitter.com/treebeardtech)
+[![PyPI versions](https://img.shields.io/pypi/pyversions/deepcov?logo=python&logoColor=white)](https://pypi.org/project/deepcov)
+[![PyPI versions](https://img.shields.io/pypi/v/deepcov?logo=python&logoColor=white)](https://pypi.org/project/deepcov) [![Twitter](https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter)](https://twitter.com/treebeardtech)
 
 **<div style="font-size:21px">🚧 under construction, do not attempt to use 🚧</div>**
 
 The goal of this project is to make it easier to identify the root cause of pytest failures.
 
-Deeptest lets you view coverage data for each individual test case in VSCode to identify which (if any) changes in your code caused failures.
+Deepcov lets you view coverage data for each individual test case in VSCode to identify which (if any) changes in your code caused failures.
 
 ## The Problem
 
@@ -33,11 +33,11 @@ What could be wrong?
 
 There are various courses of action I can take to make sense of this. Re-running the suite, debugging individual tests or opening a PR to run CI can help, but are time consuming.
 
-Deeptest proposes a way of identifying if your code change has impacted a test without re-running failures.
+Deepcov proposes a way of identifying if your code change has impacted a test without re-running failures.
 
 ## The Solution
 
-Deeptest shows lines of code that were run by failing tests, so you can connect test failures with source changes.
+Deepcov shows lines of code that were run by failing tests, so you can connect test failures with source changes.
 
 ### Pre-req: Capture test coverage and results when you run pytest
 

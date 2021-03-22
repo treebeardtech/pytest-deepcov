@@ -1,16 +1,16 @@
 [tool.poetry]
-name = "deeptest"
-version = "0.0.10"
+name = "deepcov"
+version = "0.0.1"
 license = "Apache-2.0"
-homepage = "https://github.com/treebeardtech/deeptest"
-description = "deeptest"
+homepage = "https://github.com/treebeardtech/deepcov"
+description = "deepcov"
 authors = ["alex-treebeard <alex@treebeard.io>"]
 packages = [
-  {include = "deeptest", from = "src"},
+  {include = "deepcov", from = "src"},
 ]
 
 [tool.poetry.scripts]
-deeptest = 'deeptest.cli:run'
+deepcov = 'deepcov.cli:run'
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -39,8 +39,8 @@ addopts = [
   "--strict-markers",
   "--capture=tee-sys",
   "--forked",
-  "-p","no:deeptest"
+  "-p","no:deepcov"
 ]
 
 [tool.poetry.plugins."pytest11"]
-deeptest = "deeptest.pytest_plugin"
+deepcov = "deepcov.pytest_plugin"

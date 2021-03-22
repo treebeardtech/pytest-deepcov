@@ -1,6 +1,6 @@
 {
   "activationEvents": [
-    "onCommand:deeptest.toggleDeeptest"
+    "onCommand:deepcov.toggleDeepcov"
   ],
   "categories": [
     "Other"
@@ -8,15 +8,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "deeptest.toggleDeeptest",
-        "title": "Deeptest"
+        "command": "deepcov.toggleDeepcov",
+        "title": "Deepcov"
       }
     ],
     "configuration": {
       "properties": {
-        "deeptest.cliLocation": {
-          "default": "deeptest",
-          "markdownDescription": "The location of your deeptest cli. Run `which deeptest` in the shell to debug.",
+        "deepcov.cliLocation": {
+          "default": "deepcov",
+          "markdownDescription": "The location of your deepcov cli. Run `which deepcov` in the shell to debug.",
           "scope": "window",
           "type": "string"
         }
@@ -25,7 +25,7 @@
     "menus": {
       "editor/title": [
         {
-          "command": "deeptest.toggleDeeptest",
+          "command": "deepcov.toggleDeepcov",
           "group": "navigation"
         }
       ]
@@ -48,13 +48,13 @@
     "typescript": "^4.1.3",
     "vscode-test": "^1.5.0"
   },
-  "displayName": "Deeptest",
+  "displayName": "Deepcov",
   "engines": {
     "vscode": "^1.54.0"
   },
   "icon": "docs/tree.png",
   "main": "./out/extension.js",
-  "name": "deeptest",
+  "name": "deepcov",
   "prettier": {
     "arrowParens": "avoid",
     "bracketSpacing": false,
@@ -69,7 +69,7 @@
   "publisher": "treebeardtech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/treebeardtech/deeptest"
+    "url": "https://github.com/treebeardtech/deepcov"
   },
   "scripts": {
     "compile": "tsc -p ./",

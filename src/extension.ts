@@ -39,26 +39,26 @@ class CliRunner {
 export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  console.log('Deeptest extension activated.')
+  console.log('Deepcov extension activated.')
   const decorationType: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType(
     {}
   )
 
   let decoratedEditors = new Set<vscode.TextEditor>()
-  const cwd = `${vscode.workspace.workspaceFolders![0].uri.path}/.deeptest`
+  const cwd = `${vscode.workspace.workspaceFolders![0].uri.path}/.deepcov`
   const cli: string = (vscode.workspace.getConfiguration() as any).get(
-    'deeptest'
+    'deepcov'
   ).cliLocation
   const cliRunner = new CliRunner(cli, cwd)
 
   let disposable = vscode.commands.registerCommand(
-    'deeptest.toggleDeeptest',
+    'deepcov.toggleDeepcov',
     async () => {
       try {
         await exec(`which ${cli}`)
       } catch (e) {
         vscode.window.showErrorMessage(
-          `Cannot find deeptest cli at "${cli}", please check the deeptest vscode settings.`
+          `Cannot find deepcov cli at "${cli}", please check the deepcov vscode settings.`
         )
         return
       }
@@ -67,7 +67,7 @@ export async function activate(
       if (isVisible) {
         const status = JSON.parse((await cliRunner.run('')).stdout)
         if (status.time_since_run === null) {
-          vscode.window.showErrorMessage('No data in .deeptest dir to show')
+          vscode.window.showErrorMessage('No data in .deepcov dir to show')
           return
         }
         const time = status.time_since_run
@@ -77,7 +77,7 @@ export async function activate(
           decoratedEditors.delete(editor)
         })
       } else {
-        vscode.window.showInformationMessage('Deeptest: off.')
+        vscode.window.showInformationMessage('Deepcov: off.')
         vscode.window.visibleTextEditors.map(editor =>
           editor.setDecorations(decorationType, [])
         )
@@ -201,7 +201,7 @@ export async function activate(
         } else {
           console.log(ee)
           vscode.window.showErrorMessage(
-            'Deeptest Exception ocurred. Please check the logs in the OUTPUT panel below.'
+            'Deepcov Exception ocurred. Please check the logs in the OUTPUT panel below.'
           )
         }
       }
