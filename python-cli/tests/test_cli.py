@@ -1,5 +1,8 @@
 import json
 import os
+import shutil
+import sys
+from subprocess import CalledProcessError, check_output
 
 import pytest
 from click.testing import CliRunner
@@ -10,9 +13,6 @@ from tests.util import RESOURCES
 from deepcov import cli
 
 pytest_plugins = "pytester"
-import shutil
-import sys
-from subprocess import CalledProcessError, check_output
 
 
 @pytest.fixture
