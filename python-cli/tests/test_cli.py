@@ -10,7 +10,7 @@ from deepcov.cli import File
 from snapshottest.pytest import PyTestSnapshotTest
 from tests.util import RESOURCES
 
-from deepcov import cli
+from deepcov import cli  # isort:skip
 
 pytest_plugins = "pytester"
 
