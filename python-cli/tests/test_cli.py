@@ -3,10 +3,11 @@ import os
 
 import pytest
 from click.testing import CliRunner
-from deepcov import cli
 from deepcov.cli import File
 from snapshottest.pytest import PyTestSnapshotTest
 from tests.util import RESOURCES
+
+from deepcov import cli
 
 pytest_plugins = "pytester"
 import shutil
