@@ -27,4 +27,4 @@ jobs:
                   author_email: 41898282+github-actions[bot]@users.noreply.github.com
                   add: python-cli/pyproject.toml
                   branch: main
-                  message: Published version ${GITHUB_REF:10}
+                  message: Published new version
