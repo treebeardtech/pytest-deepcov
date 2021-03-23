@@ -76,7 +76,7 @@
     "compile": "tsc -p ./ && yarn run lint",
     "lint": "eslint src --ext ts",
     "package": "yarn run vsce package",
-    "publish": "yarn version --no-git-tag-version --new-version && yarn run vsce publish",
+    "publish": "yarn version --no-git-tag-version ${0} --new-version && yarn run vsce publish",
     "test": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run compile",
     "watch": "tsc -watch -p ./"
