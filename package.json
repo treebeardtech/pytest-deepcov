@@ -72,7 +72,8 @@
     "url": "https://github.com/treebeardtech/deepcov"
   },
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./ && yarn run lint",
+    "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run compile",
     "watch": "tsc -watch -p ./"
