@@ -18,7 +18,7 @@ jobs:
             - run: poetry build
             - run: pip install twine
             - run: twine upload dist/* -ualex-treebeard -p${{ secrets.PYPI_PASSWORD }}
-            - run: yarn && yarn run publish ${GITHUB_REF:10}
+            - run: yarn && yarn run bumpversion ${GITHUB_REF:10} && yarn run publish
               env:
                   VSCE_PAT: ${{ secrets.VSCE_PAT }}
             - uses: EndBug/add-and-commit@v7.0.0
