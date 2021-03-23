@@ -12,15 +12,13 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-python@v2
-            - run: npm i --global vsce
             - run: pip install poetry
             - run: echo "ref is $GITHUB_REF"
             - run: poetry version ${GITHUB_REF:10}
             - run: poetry build
             - run: pip install twine
             - run: twine upload dist/* -ualex-treebeard -p${{ secrets.PYPI_PASSWORD }}
-            - name: publish extension
-              run: cd .. && yarn && yarn version --no-git-tag-version --new-version ${GITHUB_REF:10} && vsce publish
+            - run: yarn && yarn run publish '${GITHUB_REF:10}'
               env:
                   VSCE_PAT: ${{ secrets.VSCE_PAT }}
             - uses: EndBug/add-and-commit@v7.0.0
