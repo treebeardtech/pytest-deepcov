@@ -1,7 +1,14 @@
-# Deepcov
+<p align="center">
+  <img width="150" src="docs/icon.png" style="border: 1px solid rgba(0,0,0,0.3)" />
+</p>
+<p align="center">See test results for every line of Python code
 
-[![PyPI versions](https://img.shields.io/pypi/pyversions/deepcov?logo=python&logoColor=white)](https://pypi.org/project/deepcov)
-[![PyPI versions](https://img.shields.io/pypi/v/deepcov?logo=python&logoColor=white)](https://pypi.org/project/deepcov) [![Twitter](https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter)](https://twitter.com/treebeardtech)
+</p>
+<p align="center">
+  <a href="https://pypi.org/project/deepcov"><img src="https://img.shields.io/pypi/pyversions/deepcov?logo=python&logoColor=white" /></a>
+  <a href="https://pypi.org/project/deepcov"><img src="https://img.shields.io/pypi/v/deepcov?logo=python&logoColor=white" /></a>
+  <a href="https://twitter.com/treebeardtech"><img src="https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter" /></a>
+</p>
 
 **<div style="font-size:21px">🚧 under construction, do not attempt to use 🚧</div>**
 
