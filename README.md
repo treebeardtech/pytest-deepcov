@@ -34,6 +34,9 @@ What if we just wanted to pay attention to tests running through components we h
 
 We are going to debug a toy test suite using deepcov.
 
+<p align="center">
+  <img width="550" src="docs/demo.gif" style="border: 1px solid rgba(0,0,0,0.3)" />
+</p>
 
 Before starting, ensure you have python and VSCode installed.
 ### Run tests with deepcov attached
@@ -41,11 +44,13 @@ Before starting, ensure you have python and VSCode installed.
 1. `code python-cli/tests/resources`
 1. (optional) `virtualenv .venv; .venv/bin/activate`
 1. `pip install pytest-deepcov`
-1. `pytest --cov`
+1. `pytest --cov=src`
 
-### View deepcov data
+### Visualise deepcov data
 1. Install VSCode extension
+1. Configure your CLI location
 1. Enable deepcov
+1. Disable deepcov
 
 ## Deepcov Internals
 
