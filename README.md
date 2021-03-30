@@ -5,68 +5,61 @@
 
 </p>
 <p align="center">
-  <a href="https://pypi.org/project/deepcov"><img src="https://img.shields.io/pypi/pyversions/deepcov?logo=python&logoColor=white" /></a>
-  <a href="https://pypi.org/project/deepcov"><img src="https://img.shields.io/pypi/v/deepcov?logo=python&logoColor=white" /></a>
+  <a href="https://pypi.org/project/pytest-deepcov"><img src="https://img.shields.io/pypi/pyversions/pytest-deepcov?logo=python&logoColor=white" /></a>
+  <a href="https://pypi.org/project/pytest-deepcov"><img src="https://img.shields.io/pypi/v/pytest-deepcov?logo=python&logoColor=white" /></a>
   <a href="https://twitter.com/treebeardtech"><img src="https://img.shields.io/static/v1?label=twitter&message=follow&color=blue&logo=twitter" /></a>
 </p>
 
-**<div style="font-size:21px">🚧 under construction, do not attempt to use 🚧</div>**
+**Deepcov is a pytest plugin + VSCode extension which combines test status and code coverage data.**
 
-The goal of this project is to make it easier to identify the root cause of pytest failures.
 
-Deepcov lets you view coverage data for each individual test case in VSCode to identify which (if any) changes in your code caused failures.
+<!-- Deepcov combines test results with code coverage data to help you understand the root cause of failures. -->
 
-## The Problem
+## Making Sense of Test Runs
 
-You are working on a bug fix. Main branch is clean according to CI, so you create a branch then put in a few source changes. All config and dependencies remain unchanged.
+Tests can often fail due to unreliable infrastructure, such as network dependencies. When this happens, it can be difficult figuring out if we should let it distract us from what we're working on.
 
-Let's run some tests before opening a PR:
+What if we just wanted to pay attention to tests running through components we have changed?
 
-```log
-FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_when_data_not_fetched_then_no_regional_update
-FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_connect
-FAILED workflow_handler/tests/test_model_r13n.py::TestR13n::test_when_data_fetched_then_update
-====== 3 failed, 510 passed, 2 xfailed, 51 warnings in 140.83s (0:02:20) =======
-```
+**Pytest** can tell us if tests pass, but can't tell us if we changed their behaviour, whereas **coverage** data can tell us if tests are running through a component, but not if they are passing.
 
-These tests look unfamiliar. They may be new, and I don't think they are related to my change. The error logs are hard to decipher.
 
-What could be wrong?
+|                             | pytest | pytest-cov | pytest-deepcov |
+|-----------------------------|--------|------------|----------------|
+| indicates code health       | <span style="color: #00CE1C">✔</span>      | <span style="color: #DF0E25">✖</span>          | <span style="color: #00CE1C">✔</span>              |
+| data for every line of code | <span style="color: #DF0E25">✖</span>      | <span style="color: #00CE1C">✔</span>          | <span style="color: #00CE1C">✔</span>              |
+|                             |        |            |                |
 
-1. False positive: The tests are not configured for my dev environment
-2. False positive: The tests are flaky, due to a network dependency/race condition
-3. True positive: My code has somehow modified these testcases
-4. Some combination of the above
+## Tutorial
 
-There are various courses of action I can take to make sense of this. Re-running the suite, debugging individual tests or opening a PR to run CI can help, but are time consuming.
+We are going to debug a toy test suite using deepcov.
 
-Deepcov proposes a way of identifying if your code change has impacted a test without re-running failures.
 
-## The Solution
+Before starting, ensure you have python and VSCode installed.
+### Run tests with deepcov attached
+1. Fork and clone this repo
+1. `code python-cli/tests/resources`
+1. (optional) `virtualenv .venv; .venv/bin/activate`
+1. `pip install pytest-deepcov`
+1. `pytest --cov`
 
-Deepcov shows lines of code that were run by failing tests, so you can connect test failures with source changes.
+### View deepcov data
+1. Install VSCode extension
+1. Enable deepcov
 
-### Pre-req: Capture test coverage and results when you run pytest
+## Deepcov Internals
 
-```zsh
-pip install -U pytest pytest-cov
+The VSCode extension fetches data for each line of code the deepcov CLI which returns JSON.
 
-pytest \
-  --cov=src \            # Collect coverage data for your repo
-  --cov-context=test \   # Ensure coverage data is segmented per-test
-  --junit-xml=results.xml # Output test results
-```
+You can use this approach to create plugins for other text editors.
 
-### View the code ran by failing tests
+## Limitations
 
-When coverage and test report data is captured, you can view test statuses for each line of code.
+`coveragepy` is used to capture coverage data using the Python trace hook. This means:
+1. You cannot use the debugger and deepcov at the same time. Deepcov detects when the debugger is active and disables itself.
+1. Everything takes 30% longer. It is best to only use deepcov to rerun subsets of a failing test suite.
+## Diving Deeper
 
-<p align="center">
-  <img width="750" src="docs/editor.png" />
-</p>
-
-## See also
-
-- https://arxiv.org/abs/1607.04347
-- https://github.com/saeg/jaguar
-- https://arxiv.org/pdf/1607.04347.pdf
+Having test results for every line of code opens up the possibility of implementing *spectrum-based fault localisation*
+- https://arxiv.org/abs/1607.04347 contains a description of this technique and expected results
+- https://github.com/saeg/jaguar implements the described heuristics in java
