@@ -13,7 +13,9 @@
 **Deepcov is a pytest plugin + VSCode extension which combines test status and code coverage data.**
 
 
-<!-- Deepcov combines test results with code coverage data to help you understand the root cause of failures. -->
+<p align="center">
+  <img width="550" src="docs/screen.png" style="border: 1px solid rgba(0,0,0,0.3)" />
+</p>
 
 ## Making Sense of Test Runs
 
