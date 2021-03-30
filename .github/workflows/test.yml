@@ -32,6 +32,7 @@ jobs:
                       python-version: '3.8'
                     - os: macos-latest
                       python-version: '3.9'
+                      test-pypi-publish: true
 
         runs-on: ${{ matrix.cfg.os }}
         steps:
@@ -41,8 +42,17 @@ jobs:
                   python-version: ${{ matrix.cfg.python-version }}
             - run: pip install poetry
             - run: poetry config virtualenvs.in-project true
+            - uses: actions/cache@v2
+              with:
+                  path: '**/node_modules'
+                  key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
             - run: yarn install
             - run: poetry install
+            - run: poetry version "$(poetry version -s).dev$(date +%s)"
+            - run: poetry build
+            - run: poetry run pip install -U "dist/pytest-deepcov-$(poetry version -s).tar.gz"
+            - if: matrix.cfg.test-pypi-publish
+              run: poetry run twine upload --repository testpypi dist/* -ualex-treebeard-test -p${{ secrets.TEST_PYPI_PASSWORD }}
             - uses: pre-commit/action@v2.0.0
               with:
                   extra_args: --verbose --all-files
@@ -60,27 +70,8 @@ jobs:
             - uses: actions/checkout@v2
             - run: yarn install
             - run: yarn lint
-            - run: yarn test
             - run: npm i --global vsce
             - run: vsce package
               env:
                   VSCE_PAT: ${{ secrets.VSCE_PAT }}
-
-    build-n-publish:
-        defaults:
-            run:
-                working-directory: python-cli
-        runs-on: macos-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v2
-            - run: pip install poetry
-            - run: |
-                  build_version="$(poetry version -s).dev$(date +%s)"
-                  echo $build_version
-                  poetry version $build_version
-            - run: poetry build
-            - run: pip install "dist/pytest-deepcov-$(poetry version -s).tar.gz"
-            - run: pip install twine
-            - run: ls -la dist
-            - run: twine upload --repository testpypi dist/* -ualex-treebeard-test -p${{ secrets.TEST_PYPI_PASSWORD }}
+            - run: yarn test
