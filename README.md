@@ -44,7 +44,7 @@ Before starting, ensure you have python and VSCode installed.
 1. `code python-cli/tests/resources`
 1. Open `src/lib.py` and `src/test_lib.py`
 1. Create yourself a new terminal window in VSCode
-1. (optional) `virtualenv .venv; .venv/bin/activate`
+1. (optional) `virtualenv .venv; . .venv/bin/activate`
 1. `pip install pytest-deepcov`
 1. `pytest --cov=src`
 1. the tests should fail, and a new directory `.deepcov` should be created
@@ -55,9 +55,14 @@ Before starting, ensure you have python and VSCode installed.
 1. Enable deepcov using the 'deepcov' button to view your pytest test results from above.
 1. Disable deepcov using the same button
 
+### Troubleshooting
+
+1. Are you on Windows? If so, please try windows subsystem for linux.
+1. Please log an issue on this repo and I will help
+1. If you are feeling brave, try using the CLI to debug (see below)
 ## Deepcov Internals
 
-The VSCode extension fetches data for each line of code the deepcov CLI which returns JSON.
+The VSCode extension fetches data for each line of code from the deepcov python package.
 
 `deepcov /Users/a/git/treebeardtech/deepcov/python-cli/tests/resources/src/lib.py`
 ```json
