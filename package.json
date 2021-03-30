@@ -53,7 +53,7 @@
   "engines": {
     "vscode": "^1.54.0"
   },
-  "icon": "docs/tree.png",
+  "icon": "docs/icon.png",
   "main": "./out/extension.js",
   "name": "deepcov",
   "prettier": {
