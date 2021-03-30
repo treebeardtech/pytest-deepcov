@@ -30,7 +30,6 @@ What if we just wanted to pay attention to tests running through components we h
 |-----------------------------|--------|------------|----------------|
 | indicates code health       | <span style="color: #00CE1C">✔</span>      | <span style="color: #DF0E25">✖</span>          | <span style="color: #00CE1C">✔</span>              |
 | data for every line of code | <span style="color: #DF0E25">✖</span>      | <span style="color: #00CE1C">✔</span>          | <span style="color: #00CE1C">✔</span>              |
-|                             |        |            |                |
 
 ## Tutorial
 
@@ -43,7 +42,7 @@ We are going to debug a toy test suite using deepcov.
 Before starting, ensure you have python and VSCode installed.
 ### Run tests with deepcov attached
 1. Fork and clone this repo
-1. `code python-cli/tests/resources`
+1. `code pytest-deepcov/python-cli/tests/resources`
 1. Open `src/lib.py` and `src/test_lib.py`
 1. Create yourself a new terminal window in VSCode
 1. (optional) `virtualenv .venv; . .venv/bin/activate`
@@ -55,10 +54,12 @@ Before starting, ensure you have python and VSCode installed.
 1. Install the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=treebeardtech.deepcov). It will add a 'deepcov' button to the top right of your editor. Don't click it yet :)
 1. Configure your CLI location: Open VSCode settings, then search for `deepcov`. Follow the instruction to connect with the python package.
 1. Enable deepcov using the 'deepcov' button to view your pytest test results from above.
+1. `src/lib.py` and `src/test_lib.py` should have annotations on every line with test results.
 1. Disable deepcov using the same button
 
 ### Troubleshooting
 
+1. If it complains that it can't find the CLI, you will need to (a) ensure the CLI is correct, (b) close and reopen VSCode to refresh the config
 1. Are you on Windows? If so, please try windows subsystem for linux.
 1. Please log an issue on this repo and I will help
 1. If you are feeling brave, try using the CLI to debug (see below)
